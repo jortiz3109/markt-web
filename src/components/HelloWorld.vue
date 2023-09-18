@@ -1,7 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 
 defineProps<{ msg: string }>()
+
+const apiResponse = reactive({response: null})
+
+onMounted(() => {
+  fetch('/api')
+    .then(response => response.json())
+    .then(data => apiResponse.response = data)
+})
 
 const count = ref(0)
 </script>
@@ -17,8 +25,15 @@ const count = ref(0)
     </p>
   </div>
 
+  <div>
+    <p><strong>Markt api response:</strong></p>
+    <code v-if="apiResponse.response" style="border: 1px solid white; padding: 10px; border-radius: 5px;">
+      {{ apiResponse.response }}
+    </code>
+  </div>
+
   <p>
-    Check out
+    Check out <strong>change</strong>
     <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
       >create-vue</a
     >, the official Vue + Vite starter
