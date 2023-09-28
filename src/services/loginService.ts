@@ -1,9 +1,8 @@
-import router from '@/router';
-import client from '@/utils/client';
+import client from '@/utils/client'
 
-const login = async (email: string, password: string) => {
+const login = async (credentials: {email: string, password: string}, store): Promise<any> => {
     await client.get('/sanctum/csrf-cookie')
-    await client.post('/auth/login', { email, password }).then(() => router.push('home'));
+    return client.post('/auth/login', credentials);
 }
 
 export default { login }
