@@ -11,13 +11,6 @@ import { useAuthStore } from '@/store/authStore'
 const errorStore = useErrorStore()
 const authStore = useAuthStore()
 
-const login = () => loginService
-    .login(formValues, authStore)
-    .then(() => {
-        authStore.setAuthenticated()
-        router.push({ name: 'home' })
-    })
-
 const initialState = (): { email: string, password: string } => ({
     email: '',
     password: ''
@@ -28,6 +21,13 @@ const reset = () => {
     Object.assign(formValues, initialState())
     errorStore.clear()
 }
+
+const login = () => loginService
+    .login(formValues)
+    .then(() => {
+        authStore.setAuthenticated()
+        router.push({ name: 'home' })
+    })
 
 </script>
 <template>

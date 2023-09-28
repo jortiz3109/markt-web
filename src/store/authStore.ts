@@ -4,7 +4,9 @@ export const useAuthStore = defineStore('auth', {
     state: () => ({
         authenticated: false,
     }),
-    persist: true,
+    persist: {
+        storage: sessionStorage,
+    },
     actions: {
         setAuthenticated(): void {
             this.authenticated = true
@@ -16,7 +18,7 @@ export const useAuthStore = defineStore('auth', {
             return this.authenticated
         },
         isGuest(): boolean {
-            return ! this.authenticated
+            return !this.authenticated
         },
     }
 })
