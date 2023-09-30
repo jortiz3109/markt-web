@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import InputEmail from '@/components/forms/inputs/InputEmail.vue'
 import InputPassword from '@/components/forms/inputs/InputPassword.vue'
-import loginService from '@/services/loginService'
-import router from '@/router'
+import { useLoginService } from '@/services/loginService'
 
 import { reactive } from 'vue'
 import { useErrorStore } from '@/store/errorStore'
-import { useAuthStore } from '@/store/authStore'
 
 const errorStore = useErrorStore()
-const authStore = useAuthStore()
 
 const initialState = (): { email: string, password: string } => ({
     email: '',
@@ -22,12 +19,7 @@ const reset = () => {
     errorStore.clear()
 }
 
-const login = () => loginService
-    .login(formValues)
-    .then(() => {
-        authStore.setAuthenticated()
-        router.push({ name: 'home' })
-    })
+const login = () => useLoginService().login(formValues)
 
 </script>
 <template>

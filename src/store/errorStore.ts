@@ -9,6 +9,8 @@ export const useErrorStore = defineStore('error', {
             this.validation = {}
         },
         setValidationErrors(errors: any): void {
+            console.log(errors);
+            
             this.validation = errors
         },
         getValidationErrors(): object {

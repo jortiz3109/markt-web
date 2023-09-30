@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { onBeforeMount } from 'vue'
 import { useAuthStore } from '@/store/authStore'
-import profileService from '@/services/profileService'
+import { useProfileService } from '@/services/profileService'
 
 const authStore = useAuthStore()
 
 onBeforeMount(() => {
-    profileService.info().then((response) => {
-        const { name, email } = response.data.user
-        authStore.setUser({ name, email })
-    })
+    useProfileService().info()
 })
 
 </script>
 <template>
-    WELCOME!!! {{ authStore.getUser().name }}
+    <div class="card">
+        <div class="card-header">Logged in as: <strong>{{ authStore.getUser().name }}</strong></div>
+        <div class="card-body">
+            Welcome to the markt app
+        </div>
+    </div>
 </template>
