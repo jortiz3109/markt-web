@@ -22,6 +22,7 @@ const interceptErrors = (error: any) => {
 
 const axiosSetup = () => {
     const instance = axios.create()
+    instance.defaults.maxRedirects = 0
     instance.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
     instance.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8'
     instance.defaults.headers.common['Accept'] = 'application/json'
