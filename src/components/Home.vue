@@ -6,7 +6,7 @@ import { useProfileService } from '@/services/profileService'
 const authStore = useAuthStore()
 
 onBeforeMount(() => {
-    useProfileService().info()
+    useProfileService(authStore).info()
 })
 
 </script>

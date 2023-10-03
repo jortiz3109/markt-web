@@ -1,9 +1,7 @@
 import client from '@/utils/client'
 import router from '@/routes/web'
-import { useAuthStore } from '@/store/authStore'
 
-export function useLoginService() {
-    const authStore = useAuthStore()
+export function useLoginService(authStore) {
     
     const login = async (credentials: { email: string, password: string }): Promise<any> => {
         await client.get('/sanctum/csrf-cookie').then(() => {
@@ -14,5 +12,12 @@ export function useLoginService() {
         })
     }
 
-    return { login }
+    const logout = async (): Promise<any> => {
+        client.post('/auth/logout').then(() => {
+            authStore.clear()
+            router.push({name: 'login'})
+        })
+    }
+
+    return { login, logout }
 }

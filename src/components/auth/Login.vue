@@ -5,8 +5,10 @@ import { useLoginService } from '@/services/loginService'
 
 import { reactive } from 'vue'
 import { useErrorStore } from '@/store/errorStore'
+import { useAuthStore } from '@/store/authStore'
 
 const errorStore = useErrorStore()
+const authStore = useAuthStore()
 
 const initialState = (): { email: string, password: string } => ({
     email: '',
@@ -19,7 +21,7 @@ const reset = () => {
     errorStore.clear()
 }
 
-const login = () => useLoginService().login(formValues)
+const login = () => useLoginService(authStore).login(formValues)
 
 </script>
 <template>
@@ -31,8 +33,8 @@ const login = () => useLoginService().login(formValues)
                         src="@/assets/icons/trash.svg"></button>
             </div>
             <div class="card-body">
-                <InputEmail :values="formValues" :errors="errorStore.getValidationErrorsFor('email')" name="email"
-                    id="email" label="Email" />
+                <InputEmail :values="formValues" :errors="errorStore.getValidationErrorsFor('email')"
+                    id="emailInput" name="email" label="Email" autocomplete="off" />
                 <InputPassword :values="formValues" :errors="errorStore.getValidationErrorsFor('password')" name="password"
                     id="password" label="Password" />
             </div>

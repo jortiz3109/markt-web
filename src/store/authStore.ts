@@ -1,12 +1,10 @@
 import { defineStore } from 'pinia'
+import { reactive } from 'vue'
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         authenticated: false,
-        user: {
-            name: '',
-            email: ''
-        }
+        user: reactive({})
     }),
     persist: {
         storage: sessionStorage,
@@ -27,11 +25,12 @@ export const useAuthStore = defineStore('auth', {
         isGuest(): boolean {
             return !this.authenticated
         },
-        getUser(): {name: string, email: string} {
+        getUser() {
             return this.user
         },
         clear(): void {
-            this.$reset
+            this.authenticated = false
+            this.user = {}
         }
     }
 })

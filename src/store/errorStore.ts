@@ -1,16 +1,15 @@
 import { defineStore } from 'pinia'
+import { reactive } from 'vue'
 
 export const useErrorStore = defineStore('error', {
     state: () => ({
-        validation: {}
+        validation: reactive({})
     }),
     actions: {
         clear(): void {
             this.validation = {}
         },
         setValidationErrors(errors: any): void {
-            console.log(errors);
-            
             this.validation = errors
         },
         getValidationErrors(): object {
