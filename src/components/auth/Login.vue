@@ -36,7 +36,7 @@ const login = () => useLoginService(authStore).login(formValues)
                 <InputEmail :values="formValues" :errors="errorStore.getValidationErrorsFor('email')"
                     id="emailInput" name="email" label="Email" autocomplete="off" />
                 <InputPassword :values="formValues" :errors="errorStore.getValidationErrorsFor('password')" name="password"
-                    id="password" label="Password" />
+                    id="password" label="Password" @keyup.enter="login"/>
             </div>
             <div class="card-footer d-flex justify-content-center">
                 <button class="btn btn-success w-75" type="button" @click="login">Login</button>

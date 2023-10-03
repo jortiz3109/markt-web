@@ -5,7 +5,7 @@ import FeedbackComponent from '@/components/forms/FeedbackComponent.vue'
 const {values, label, errors} = defineProps<{
     values: Object,
     label: String,
-    errors: Array<any>,
+    errors: Array<String>,
 }>()
 
 </script>

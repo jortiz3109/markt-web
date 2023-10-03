@@ -12,12 +12,17 @@ const interceptErrors = (error: any) => {
             sessionStorage.clear()
             break;
 
-        case HTTP_UNPROCESSABLE_ENTITY:            
+        case HTTP_UNPROCESSABLE_ENTITY:
             errorStore.setValidationErrors(error?.response?.data?.errors)
             break;
     }
 
     return Promise.reject(error);
+}
+
+const processSuccessResponse = (response: any) => {
+    errorStore.clear()
+    return response
 }
 
 const axiosSetup = () => {
@@ -27,7 +32,7 @@ const axiosSetup = () => {
     instance.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8'
     instance.defaults.headers.common['Accept'] = 'application/json'
     instance.defaults.withCredentials = true
-    instance.interceptors.response.use(response => response, error => interceptErrors(error))
+    instance.interceptors.response.use(response => processSuccessResponse(response), error => interceptErrors(error))
 
     return instance
 }
