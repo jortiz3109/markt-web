@@ -2,7 +2,7 @@ import axios from 'axios'
 import pinia from '@/store'
 import { useErrorStore } from '@/store/errorStore'
 
-import { HTTP_UNAUTHORIZED, HTTP_UNPROCESSABLE_ENTITY } from '@/constants/httpStatuses'
+import { HTTP_UNAUTHORIZED, HTTP_UNPROCESSABLE_ENTITY, HTTP_PAGE_EXPIRED } from '@/constants/httpStatuses'
 
 const errorStore = useErrorStore(pinia)
 
@@ -13,6 +13,7 @@ const interceptErrors = (error: any) => {
             break;
 
         case HTTP_UNPROCESSABLE_ENTITY:
+        case HTTP_PAGE_EXPIRED:
             errorStore.setValidationErrors(error?.response?.data?.errors)
             break;
     }
