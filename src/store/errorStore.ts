@@ -1,21 +1,27 @@
 import { defineStore } from 'pinia'
+import { validationError } from '@/types'
 
 export const useErrorStore = defineStore('error', {
     state: () => ({
-        validation: {}
+        validation: [] as validationError[]
     }),
     actions: {
         clear(): void {
-            this.validation = {}
+            this.$reset()
         },
-        setValidationErrors(errors: any): void {
-            this.validation = errors
+        setValidationError(error: validationError): void {
+            this.validation.push(error)
+        },
+        setValidationErrors(validationErrors: validationError[]): void {
+            this.validation = validationErrors
         },
         getValidationErrors(): object {
             return this.validation
         },
-        getValidationErrorsFor(field: string): Array<any> {
-            return this.validation[field] ?? []
+        getValidationErrorsFor(field: string): Array<String> {
+            const error = this.validation.find((error: validationError) => error.for === field)
+
+            return error?.errors ?? []
         },
     }
 })
