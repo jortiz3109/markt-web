@@ -1,36 +1,62 @@
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
+
+interface authState {
+    token: {
+        token: null | string,
+        expiresAt: null | string
+    },
+    user: {
+        name: string | null,
+        email: string | null
+    }
+}
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        authenticated: false,
-        user: reactive({})
-    }),
+        token: {
+            token: null,
+            expiresAt: null,
+        },
+        user: {
+            name: null,
+            email: null
+        }
+    }) as authState,
     persist: {
-        storage: sessionStorage,
+        storage: localStorage,
     },
     actions: {
-        setUser(user: {name:string, email: string}): void {
+        setUser(user: { name: string, email: string }): void {
             this.user = user
         },
-        setAuthenticated(): void {
-            this.authenticated = true
+        setToken(token: {token: string, expiresAt: string}): void {
+            this.token = token
         },
-        setUnauthenticated(): void {
-            this.authenticated = false
+        getTokenExpiration(): string | null {
+            return this.token.expiresAt
         },
-        isAuthenticated(): boolean {
-            return this.authenticated
+        setTokenExpiration(expiresAt: string): void {
+            this.token.expiresAt = expiresAt
+        },
+        hasBearerToken(): boolean {
+            return null !== this.token.token
+        },
+        getBearerToken(): string {
+            return this.token.token ?? ''
+        },
+        isAuthenticated(): boolean {            
+            return this.token.expiresAt
+                ? new Date(this.token.expiresAt) > new Date()
+                : false
         },
         isGuest(): boolean {
-            return !this.authenticated
+            return false === this.isAuthenticated()
         },
         getUser() {
             return this.user
         },
         clear(): void {
-            this.authenticated = false
-            this.user = {}
+            this.$reset()
         }
     }
 })

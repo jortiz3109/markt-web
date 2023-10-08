@@ -1,13 +1,7 @@
 <script setup lang="ts">
-import { onBeforeMount } from 'vue'
 import { useAuthStore } from '@/store/authStore'
-import { useProfileService } from '@/services/profileService'
 
 const authStore = useAuthStore()
-
-onBeforeMount(() => {
-    useProfileService(authStore).info()
-})
 
 </script>
 <template>

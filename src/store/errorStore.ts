@@ -1,9 +1,5 @@
 import { defineStore } from 'pinia'
-
-interface validationError {
-    for: string
-    errors: string[]
-}
+import { validationError } from '@/types'
 
 export const useErrorStore = defineStore('error', {
     state: () => ({
@@ -13,10 +9,11 @@ export const useErrorStore = defineStore('error', {
         clear(): void {
             this.$reset()
         },
-        setValidationErrors(errors: any): void {
-            for (const [key, values] of Object.entries(errors)) {
-                this.validation.push({for: key, errors: values} as validationError)
-            }
+        setValidationError(error: validationError): void {
+            this.validation.push(error)
+        },
+        setValidationErrors(validationErrors: validationError[]): void {
+            this.validation = validationErrors
         },
         getValidationErrors(): object {
             return this.validation
