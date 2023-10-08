@@ -13,14 +13,14 @@ export function useLoginService() {
             const {token, expires_at} = response
             authStore.setToken({token, expiresAt: expires_at})
             authStore.setUser(response.user)
-            router.push({ name: 'home' })
+            setTimeout(() => router.push({ name: 'home' }), 125)
         })
     }
 
     const logout = async (): Promise<any> => {
         apiClient.logout().then(() => {
             authStore.clear()
-            router.push({ name: 'login' })
+            setTimeout(() => router.push({ name: 'login' }), 125)
         })
     }
 

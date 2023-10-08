@@ -12,3 +12,11 @@ export interface validationError {
     for: string
     errors: string[]
 }
+
+export interface ShoppingListInterface {
+    total: number,
+    isPaid: boolean,
+    shop: {
+        name: string
+    }
+}

@@ -1,9 +1,9 @@
-import pinia from '@/store'
 import { useErrorStore } from '@/store/errorStore'
 import { validationError } from '@/types'
 import { HTTP_UNAUTHORIZED, HTTP_UNPROCESSABLE_ENTITY } from '@/constants/httpStatuses'
-
-const errorStore = useErrorStore(pinia)
+import { useAuthStore } from '@/store/authStore'
+import pinia from '@/store'
+import router from '@/routes/web'
 
 export const evaluateResponse = (response: Response) => {
     if (response.ok) {
@@ -14,10 +14,14 @@ export const evaluateResponse = (response: Response) => {
 }
 
 const evaluateAsError = async (response: Response): Promise<any> => {
+    const errorStore = useErrorStore(pinia)
+
     response.json().then(body => {
         switch (response.status) {
             case HTTP_UNAUTHORIZED:
-                localStorage.clear()
+                const authStore = useAuthStore(pinia)
+                authStore.clear()
+                setTimeout(() => router.push({ name: 'login' }), 125)
                 break
             case HTTP_UNPROCESSABLE_ENTITY:
                 if (body?.errors) {

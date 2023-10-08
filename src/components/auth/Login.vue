@@ -4,6 +4,9 @@ import { reactive } from 'vue'
 import { useErrorStore } from '@/store/errorStore'
 import InputEmail from '@/components/forms/inputs/InputEmail.vue'
 import InputPassword from '@/components/forms/inputs/InputPassword.vue'
+import TrashIcon from '@/components/icons/TrashIcon.vue'
+import DoorOpen from '@/components/icons/DoorOpen.vue'
+import Logo from '@/components/icons/Logo.vue'
 
 const errorStore = useErrorStore()
 
@@ -23,6 +26,9 @@ const login = () => useLoginService().login(formValues)
 </script>
 <template>
     <div class="login">
+        <picture class="rounded text-secondary p-2 d-flex justify-content-center">
+            <Logo width="64" height="64"/>
+        </picture>
         <div class="card border-0 w-100">
             <div class="card-body">
                 <InputEmail :values="formValues" :errors="errorStore.getValidationErrorsFor('email')"
@@ -31,9 +37,11 @@ const login = () => useLoginService().login(formValues)
                     id="password" label="Password" @keyup.enter="login"/>
             </div>
             <div class="card-footer border-0 bg-transparent d-flex justify-content-between">
-                <button class="btn btn-success w-75" type="button" @click="login">Login</button>
+                <button class="btn btn-success w-100" type="button" @click="login">
+                    <DoorOpen /> Login
+                </button>
                 <button class="btn btn-sm text-danger" type="button" @click="reset">
-                    <img class="text-danger" src="@/assets/icons/trash.svg">
+                    <TrashIcon />
                 </button>
             </div>
         </div>

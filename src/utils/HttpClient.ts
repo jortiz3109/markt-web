@@ -14,8 +14,7 @@ export class HttpClient {
             cache: 'no-cache',
             credentials: 'omit',
             headers: headers,
-            redirect: 'manual',
-            body: null
+            redirect: 'manual'
         } as clientConfig
     }
 
@@ -26,9 +25,8 @@ export class HttpClient {
         this.#config.headers = headers
     }
 
-    async call(method: string, url: string, data: any = {}): Promise<any> {
+    async call(method: string, url: string): Promise<any> {
         this.#config.method = method
-        this.#config.body = JSON.stringify(data)
 
         return await fetch(url, this.#config as RequestInit)
     }
@@ -37,11 +35,12 @@ export class HttpClient {
         return this.call('PATCH', 'auth/token/renew')
     }
 
-    async get(url: string, data: any = {}): Promise<any> {
-        return this.call('GET', url, data)
+    async get(url: string): Promise<any> {
+        return this.call('GET', url)
     }
 
     async post(url: string, data: any = {}): Promise<any> {
-        return this.call('POST', url, data)
+        this.#config.body = JSON.stringify(data)
+        return this.call('POST', url)
     }
 }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/store/authStore'
+import ShoppingListIndex from '@/components/shopping-lists/ShoppingListIndex.vue'
 
 const authStore = useAuthStore()
 
@@ -11,4 +12,6 @@ const authStore = useAuthStore()
             Welcome to the markt app
         </div>
     </div>
+    <hr>
+    <ShoppingListIndex />
 </template>

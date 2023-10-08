@@ -24,9 +24,9 @@ export function useApiClient() {
         }
     }
 
-    const get = async (url: string, data: any = {}) => {
+    const get = async (url: string) => {
         prepare()
-        return client.get(url, data).then((response: Response) => evaluateResponse(response))
+        return client.get(url).then((response: Response) => evaluateResponse(response))
     }
 
     const post = async (url: string, data: any = {}) => {
@@ -51,16 +51,12 @@ export function useApiClient() {
             const tokenExpirationDate = new Date(tokenExpiration)
             const actualDate = new Date()
 
-            if (tokenExpirationDate < actualDate) {
-                return
-            }
-
             const diffMs = +tokenExpirationDate - +actualDate;
             const diffMins = Math.floor((diffMs / 1000) / 60);
 
-            console.log(diffMins);
+            console.table({tokenExpirationDate, actualDate});
 
-            if (diffMins <= 10) {
+            if (tokenExpirationDate > actualDate && diffMins <= 5) {
                 client.renewToken()
                     .then((response: Response) => response.json())
                     .then((response) => authStore.setTokenExpiration(response.data.expires_at))
