@@ -14,7 +14,7 @@ export interface validationError {
 }
 
 export interface ShoppingListInterface {
-    total: number,
+    total: string,
     isPaid: boolean,
     shop: {
         name: string

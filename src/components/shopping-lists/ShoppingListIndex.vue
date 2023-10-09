@@ -12,7 +12,17 @@ const initialState = () => ({
 
 onMounted(() => {
     shoppingListService.index().then((response: {data: any[], links: any, meta: any}) => {
-        response.data.forEach(shoppingList => state.shoppingLists.push(shoppingList));
+        response.data.forEach(item => {
+            const shoppingList = {
+                total: item.total,
+                isPaid: item.is_paid,
+                shop: {
+                    name: item.shop.name
+                }
+            } as ShoppingListInterface
+            
+            state.shoppingLists.push(shoppingList)
+        });
     })
 })
 
