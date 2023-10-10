@@ -10,19 +10,18 @@ const initialState = () => ({
     shoppingLists: [] as ShoppingListInterface[]
 })
 
-onMounted(() => {
-    shoppingListService.index().then((response: {data: any[], links: any, meta: any}) => {
-        response.data.forEach(item => {
-            const shoppingList = {
-                total: item.total,
-                isPaid: item.is_paid,
-                shop: {
-                    name: item.shop.name
-                }
-            } as ShoppingListInterface
-            
-            state.shoppingLists.push(shoppingList)
-        });
+onMounted(async () => {
+    const response: { data: any[], links: any, meta: any } = await shoppingListService.index()
+    response.data.forEach(item => {
+        const shoppingList = {
+            total: item.total,
+            isPaid: item.is_paid,
+            shop: {
+                name: item.shop.name
+            }
+        } as ShoppingListInterface
+
+        state.shoppingLists.push(shoppingList)
     })
 })
 
@@ -33,7 +32,7 @@ const state = reactive(initialState())
     <div class="card">
         <div class="card-header">My shopping lists</div>
         <div class="card-body">
-            <ShoppingList v-for="(shoppingList, index) in state.shoppingLists" :key="index" :shopping-list="shoppingList"/>
+            <ShoppingList v-for="(shoppingList, index) in state.shoppingLists" :key="index" :shopping-list="shoppingList" />
         </div>
     </div>
 </template>

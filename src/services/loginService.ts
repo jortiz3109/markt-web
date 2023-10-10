@@ -9,18 +9,18 @@ export function useLoginService() {
     const authStore = useAuthStore(pinia)
 
     const login = async (credentials: { email: string, password: string }): Promise<any> => {
-        apiClient.login(credentials).then((response: { token: string, expires_at: string; user: any }) => {
-            const {token, expires_at} = response
-            authStore.setToken({token, expiresAt: expires_at})
+        apiClient.login(credentials).then((response) => {
+            const { token, expires_at } = response
+            authStore.setToken({ token, expiresAt: expires_at })
             authStore.setUser(response.user)
-            setTimeout(() => router.push({ name: 'home' }), 125)
+            router.push({ name: 'home' })
         })
     }
 
     const logout = async (): Promise<any> => {
-        apiClient.logout().then(() => {
+        apiClient.logout().finally(() => {
             authStore.clear()
-            setTimeout(() => router.push({ name: 'login' }), 125)
+            router.push({ name: 'login' })
         })
     }
 

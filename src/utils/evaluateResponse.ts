@@ -1,19 +1,21 @@
-import { useErrorStore } from '@/store/errorStore'
-import { validationError } from '@/types'
-import { HTTP_UNAUTHORIZED, HTTP_UNPROCESSABLE_ENTITY } from '@/constants/httpStatuses'
-import { useAuthStore } from '@/store/authStore'
 import pinia from '@/store'
 import router from '@/routes/web'
+import { useErrorStore } from '@/store/errorStore'
+import { validationError } from '@/types'
+import { HTTP_INTERNAL_SERVER_ERROR, HTTP_UNAUTHORIZED, HTTP_UNPROCESSABLE_ENTITY } from '@/constants/httpStatuses'
+import { useAuthStore } from '@/store/authStore'
 
-export const evaluateResponse = (response: Response) => {
+export const evaluateResponse = (response: Response): Promise<any> | Error => {
     if (response.ok) {
-        return evaluateAsSuccess(response)
+        return response.json()
     }
+    
+    evaluateError(response)
 
-    return evaluateAsError(response)
+    return new Error('Request error');
 }
 
-const evaluateAsError = async (response: Response): Promise<any> => {
+const evaluateError = (response: Response): void => {
     const errorStore = useErrorStore(pinia)
 
     response.json().then(body => {
@@ -21,7 +23,7 @@ const evaluateAsError = async (response: Response): Promise<any> => {
             case HTTP_UNAUTHORIZED:
                 const authStore = useAuthStore(pinia)
                 authStore.clear()
-                setTimeout(() => router.push({ name: 'login' }), 125)
+                router.push({ name: 'login' })
                 break
             case HTTP_UNPROCESSABLE_ENTITY:
                 if (body?.errors) {
@@ -33,17 +35,9 @@ const evaluateAsError = async (response: Response): Promise<any> => {
                     errorStore.setValidationErrors(validationErrors)
                 }
                 break
+            case HTTP_INTERNAL_SERVER_ERROR:
+                console.log('Server error');
+                break
         }
     })
-
-    return Promise.reject()
-}
-
-const evaluateAsSuccess = async (response: Response): Promise<any> => {
-    const body = await response.json().then((body) => {
-        localStorage.removeItem('error')
-        return body
-    })
-
-    return Promise.resolve(body)
 }

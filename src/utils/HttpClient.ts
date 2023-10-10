@@ -1,4 +1,4 @@
-import { clientConfig } from "@/types"
+import { apiGetRequest, apiPostRequest, apiRequest, clientConfig } from "@/types"
 
 export class HttpClient {
     #config: clientConfig
@@ -25,22 +25,23 @@ export class HttpClient {
         this.#config.headers = headers
     }
 
-    async call(method: string, url: string): Promise<any> {
+    async call(request: apiRequest ): Promise<any> {
+        
+        const {method, url} = request
         this.#config.method = method
 
         return await fetch(url, this.#config as RequestInit)
     }
 
-    async renewToken(): Promise<any> {
-        return this.call('PATCH', 'auth/token/renew')
+    async get(request: apiGetRequest): Promise<any> {
+        const {url, method} = request
+        return this.call({url, method})
     }
 
-    async get(url: string): Promise<any> {
-        return this.call('GET', url)
-    }
-
-    async post(url: string, data: any = {}): Promise<any> {
+    async post(request:apiPostRequest): Promise<any> {
+        const{url, method, data} = request
         this.#config.body = JSON.stringify(data)
-        return this.call('POST', url)
+        
+        return this.call({url, method})
     }
 }

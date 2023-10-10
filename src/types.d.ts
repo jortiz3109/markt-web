@@ -20,3 +20,17 @@ export interface ShoppingListInterface {
         name: string
     }
 }
+
+export interface apiRequest {
+    url: string,
+    method: string,
+    headers?: any,
+}
+
+export type apiGetRequest = apiRequest & {
+    query: any
+}
+
+export type apiPostRequest = apiRequest & {
+    data: any
+}

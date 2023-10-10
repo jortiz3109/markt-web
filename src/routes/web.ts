@@ -1,20 +1,20 @@
-import { createWebHistory, createRouter, NavigationFailureType, isNavigationFailure } from 'vue-router'
+import { createWebHistory, createRouter, NavigationFailureType, isNavigationFailure, RouteRecordRaw } from 'vue-router'
 
-const loginComponent = () => import('@/components/auth/Login.vue')
-const homeComponent = () => import('@/components/HelloWorld.vue')
-import Home from '@/components/Home.vue'
+const LoginView = () => import('@/views/LoginView.vue')
+const HomeView = () => import('@/views/HomeView.vue')
+const HomeComponent = () => import('@/components/HelloWorld.vue')
+
 import { authenticatedGuard, guestGuard } from './guards'
-import { useAuthStore } from '@/store/authStore'
 
-const routes = [
+const routes: RouteRecordRaw[] = [
     {
         path: '/',
-        component: homeComponent,
+        component: HomeComponent,
     },
     {
         name: 'login',
         path: '/login',
-        component: loginComponent,
+        component: LoginView,
         meta: {
             guards: [guestGuard]
         }
@@ -22,7 +22,7 @@ const routes = [
     {
         name: 'home',
         path: '/home',
-        component: Home,
+        component: HomeView,
         meta: {
             guards: [authenticatedGuard]
         }
@@ -42,10 +42,9 @@ router.afterEach((to, from, failure) => {
 
 router.beforeEach((to, from) => {
     const guards = to.meta?.guards ?? []
-    const authStore = useAuthStore()
 
     for (const guard of guards) {
-        const guardResponse = guard({to, from, authStore})
+        const guardResponse = guard({to, from})
 
         if (guardResponse !== true) {
             return guardResponse

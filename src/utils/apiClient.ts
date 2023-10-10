@@ -1,9 +1,9 @@
+import pinia from '@/store'
 import { evaluateResponse } from '@/utils/evaluateResponse'
 import { HttpClient } from './HttpClient'
 import { useErrorStore } from '@/store/errorStore'
 import { useAuthStore } from '@/store/authStore'
-import pinia from '@/store'
-
+import { apiGetRequest, apiPostRequest } from '@/types'
 
 export function useApiClient() {
     const client = new HttpClient()
@@ -12,10 +12,10 @@ export function useApiClient() {
 
     const clearErrors = () => errorStore.clear()
 
-    const prepare = () => {
+    const prepare = (): void => {
         clearErrors()
-        addBearerToken()
         renewToken()
+        addBearerToken()
     }
 
     const addBearerToken = (): void => {
@@ -24,25 +24,69 @@ export function useApiClient() {
         }
     }
 
-    const get = async (url: string) => {
+    const get = async (url: string, query: any = {}): Promise<any> => {
         prepare()
-        return client.get(url).then((response: Response) => evaluateResponse(response))
+        const request: apiGetRequest = {
+            url,
+            query,
+            method: 'GET'
+        }
+
+        return client.get(request).then((response: Response) => evaluateResponse(response))
     }
 
-    const post = async (url: string, data: any = {}) => {
+    const post = async (url: string, data: any = {}): Promise<any> => {
         prepare()
-        return client.post(url, data).then((response: Response) => evaluateResponse(response))
+
+        const request: apiPostRequest = {
+            url,
+            data,
+            method:'POST'
+        }
+
+        return client.post(request).then((response: Response) => evaluateResponse(response))
     }
 
-    const logout = async () => {
+    const put = async (url: string, data: any = {}): Promise<any> => {
+        prepare()
+
+        const request: apiPostRequest = {
+            url,
+            data,
+            method:'PUT'
+        }
+
+        return client.post(request).then((response: Response) => evaluateResponse(response))
+    }
+
+    const patch = async (url: string, data: any = {}) => {
+        prepare()
+
+        const request: apiPostRequest = {
+            url,
+            data,
+            method:'PATCH'
+        }
+
+        return client.post(request).then((response: Response) => evaluateResponse(response))
+    }
+
+    const logout = async (): Promise<any> => {
         clearErrors()
         addBearerToken()
-        return client.post('/auth/logout').then((response: Response) => evaluateResponse(response))
+        post('/auth/logout')
     }
 
-    const login = async (data: { email: string, password: string }) => {
+    const login = async (credentials: {email: string, password: string}): Promise<any> => {
         clearErrors()
-        return client.post('/auth/login', data).then((response: Response) => evaluateResponse(response))
+
+        const request: apiPostRequest = {
+            url: 'auth/login',
+            method:'POST',
+            data: credentials
+        }
+        
+        return client.post(request).then((response: Response) => evaluateResponse(response))
     }
 
     const renewToken = (): void => {
@@ -54,17 +98,19 @@ export function useApiClient() {
             const diffMs = +tokenExpirationDate - +actualDate;
             const diffMins = Math.floor((diffMs / 1000) / 60);
 
-            console.table({tokenExpirationDate, actualDate});
-
             if (tokenExpirationDate > actualDate && diffMins <= 5) {
-                client.renewToken()
+                const request: apiPostRequest = {
+                    url: '/auth/token/renew',
+                    method:'POST',
+                    data: {}
+                }
+
+                client.post(request)
                     .then((response: Response) => response.json())
                     .then((response) => authStore.setTokenExpiration(response.data.expires_at))
             }
         }
     }
 
-    const setBearerToken = (bearerToken: string) => client.setBearerToken(bearerToken)
-
-    return { get, post, login, logout, setBearerToken }
+    return { get, post, put, patch, login, logout }
 }
