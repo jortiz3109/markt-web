@@ -77,7 +77,7 @@ export function useApiClient() {
         post('/auth/logout')
     }
 
-    const login = async (credentials: {email: string, password: string}): Promise<any> => {
+    const login = async (credentials: {email: string, password: string}) => {
         clearErrors()
 
         const request: apiPostRequest = {
@@ -99,9 +99,10 @@ export function useApiClient() {
             const diffMins = Math.floor((diffMs / 1000) / 60);
 
             if (tokenExpirationDate > actualDate && diffMins <= 5) {
+                addBearerToken()
                 const request: apiPostRequest = {
                     url: '/auth/token/renew',
-                    method:'POST',
+                    method:'PATCH',
                     data: {}
                 }
 

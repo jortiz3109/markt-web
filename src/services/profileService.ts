@@ -2,13 +2,9 @@ import { useApiClient } from "@/utils/apiClient";
 
 const apiClient = useApiClient()
 
-export function useProfileService(authStore) {
+export function useProfileService() {
     const info = async (): Promise<any> => {
-        apiClient.get('/api/user/info').then((response) => {
-            const { name, email } = response.data.user
-            
-            authStore.setUser({ name, email })
-        });
+        return apiClient.get('/api/user/info')
     }
     
     return { info }

@@ -1,27 +1,14 @@
 import { useApiClient } from '@/utils/apiClient'
-import { useAuthStore } from '@/store/authStore'
-import router from '@/routes/web'
-import pinia from '@/store'
-
 
 export function useLoginService() {
     const apiClient = useApiClient()
-    const authStore = useAuthStore(pinia)
 
     const login = async (credentials: { email: string, password: string }): Promise<any> => {
-        apiClient.login(credentials).then((response) => {
-            const { token, expires_at } = response
-            authStore.setToken({ token, expiresAt: expires_at })
-            authStore.setUser(response.user)
-            router.push({ name: 'home' })
-        })
+        return apiClient.login(credentials)
     }
 
     const logout = async (): Promise<any> => {
-        apiClient.logout().finally(() => {
-            authStore.clear()
-            router.push({ name: 'login' })
-        })
+        return apiClient.logout()
     }
 
     return { login, logout }
