@@ -57,7 +57,7 @@ const login = async () => {
             @click="login">
             <DoorOpenIcon /> Login
         </button>
-        <button class="btn btn-sm text-danger" type="button" @click="reset">
+        <button class="btn btn-sm text-white" type="button" @click="reset">
             <TrashIcon />
         </button>
     </div>
