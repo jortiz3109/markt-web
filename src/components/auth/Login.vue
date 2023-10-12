@@ -62,9 +62,3 @@ const login = async () => {
         </button>
     </div>
 </template>
-<style scoped>
-.btn-login {
-    background-color: rgba(22, 24, 27, 1);
-    color: white;
-}
-</style>

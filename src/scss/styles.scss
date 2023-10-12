@@ -10,3 +10,11 @@
 .fade-leave-to {
   opacity: 0;
 }
+
+.btn-actions {
+  @include button-variant(transparent, transparent, $gray-900, $gray-300, $gray-500);
+}
+
+.btn-login {
+  @include button-variant($dark, $white);
+}
