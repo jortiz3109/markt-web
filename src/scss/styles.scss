@@ -1,5 +1,6 @@
 @import "bootstrap/scss/bootstrap";
 @import "vue-toast-notification/dist/theme-bootstrap.css";
+@import "vue-loading-overlay/dist/css/index.css";
 
 .fade-enter-active,
 .fade-leave-active {
@@ -17,4 +18,8 @@
 
 .btn-login {
   @include button-variant($dark, $white);
+}
+
+.vl-parent {
+  min-height: 8em;
 }
