@@ -14,8 +14,11 @@ export interface validationError {
 }
 
 export interface ShoppingListInterface {
+    uuid: string,
     total: string,
+    items: number,
     isPaid: boolean,
+    createdAt: Date,
     shop: {
         name: string
     }

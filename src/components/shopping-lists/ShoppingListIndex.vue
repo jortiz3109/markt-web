@@ -7,7 +7,9 @@ import RefreshIcon from '@/components/icons/RefreshIcon.vue'
 import Search from '@/components/layout/Search.vue'
 import Loading from 'vue-loading-overlay'
 import ShoppingList from './ShoppingList.vue'
+import { useHelpers } from '@/composables/useHelpers'
 
+const { money } = useHelpers()
 const shoppingListService = useShoppingListService()
 const initialShoppingLists = () => ([] as ShoppingListInterface[])
 const shoppingLists = reactive(initialShoppingLists())
@@ -19,8 +21,10 @@ const get = async () => {
         shoppingLists.length = 0
         response.data.forEach(item => {
             const shoppingList = {
-                total: item.total,
+                total: money(item.total),
+                items: item.items,
                 isPaid: item.is_paid,
+                createdAt: new Date(item.created_at),
                 shop: {
                     name: item.shop.name
                 }
@@ -53,9 +57,12 @@ onMounted(async () => get())
                 </div>
             </div>
         </div>
-        <div class="vl-parent card-body d-flex gap-3">
+        <div class="vl-parent card-body">
             <loading v-model:active="isLoading" :is-full-page="false" />
-            <ShoppingList v-for="(shoppingList, index) in shoppingLists" :shopping-list="shoppingList" :key="index"/>
+            <div class="row gx-3 gy-3 row-cols-1 row-cols-sm-2 row-cols-md-4">
+                <ShoppingList v-for="(shoppingList) in shoppingLists" :shopping-list="shoppingList"
+                    :key="shoppingList.uuid" />
+            </div>
         </div>
     </div>
 </template>

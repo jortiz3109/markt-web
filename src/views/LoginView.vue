@@ -29,6 +29,7 @@ import Logo from '@/components/icons/Logo.vue'
 
 .card-login {
     backdrop-filter: blur(20px);
+    min-width: 300px;
 }
 
 </style>
